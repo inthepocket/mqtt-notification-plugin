@@ -296,12 +296,8 @@ public class MqttNotifier extends Notifier {
         final PrintStream logger = listener.getLogger();
         String result = rawString;
         try {
-            EnvVars environment = build.getProject().getEnvironment(build.getBuiltOn(), listener);
-            for (Map.Entry<String, String> envVarEntry : environment.entrySet()) {
-                String key = "\\$" + envVarEntry.getKey();
-                String value = envVarEntry.getValue();
-                result = result.replaceAll(key, value);
-            }
+          result = build.getEnvironment(listener).expand(rawString);
+
         } catch (IOException ioe) {
             logger.println("ERROR: Caught IOException while trying to replace environment variables: " + ioe.getMessage());
             ioe.printStackTrace(logger);
